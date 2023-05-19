@@ -1,0 +1,5 @@
+<h1>My Products</h1>
+<input type="text" [(ngModel)]="productName"> 
+<button (click)="onAddProduct()">Add Product</button>
+<!-- <div *ngFor="let product of products">{{ product }}</div> -->
+<app-product (productClicked)="onRemoveProduct(product)" *ngFor="let product of products" [productName]="product"></app-product>
