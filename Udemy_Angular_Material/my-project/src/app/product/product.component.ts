@@ -1,18 +1,25 @@
-import { Component, Input, EventEmitter, Output} from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnInit} from '@angular/core';
+import { ProductsService } from "../products.service";
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css']
 })
-export class ProductComponent {
+export class ProductComponent implements OnInit{
   @Input() productName: string;
   @Output() productClicked = new EventEmitter();
 
-  constructor() {}
+  constructor(private productsService: ProductsService) {   
+  }
+
+  ngOnInit(): void {
+    
+  }
 
   onClicked(){
-    this.productClicked.emit();
+    // this.productClicked.emit();
+    this.productsService.deleteProduct(this.productName)
 
   }
 
