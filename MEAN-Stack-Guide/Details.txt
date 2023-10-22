@@ -1,0 +1,3 @@
+Name: Angular & NodeJS - The MEAN Stack Guide [2023 Edition]
+
+Link: https://www.udemy.com/course/angular-2-and-nodejs-the-practical-guide/
