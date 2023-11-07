@@ -25,31 +25,32 @@ export class PostListComponent implements OnInit, OnDestroy{
   private postsSub: Subscription;
   private authStatusSub: Subscription;
 
-  constructor(public postService: PostService, private authService: AuthService) {}
+  constructor(public postsService: PostService, private authService: AuthService) {}
   
-  ngOnInit(): void {
+  ngOnInit() {
     this.isLoading = true;
-    this.postService.getPosts(this.postsPerPage, this.currentPage);
+    this.postsService.getPosts(this.postsPerPage, this.currentPage);
     this.userId = this.authService.getUserId();
-    this.postsSub =  this.postService.getPostsUpdatedListner()
-    .subscribe((postsData: {posts: Post[], postCount: number}) => {
-      this.isLoading = false;
-      this.totalPosts = postsData.postCount;
-      this.posts = postsData.posts;
-    });
+    this.postsSub = this.postsService
+      .getPostsUpdatedListner()
+      .subscribe((postData: { posts: Post[]; postCount: number }) => {
+        this.isLoading = false;
+        this.totalPosts = postData.postCount;
+        this.posts = postData.posts;
+      });
     this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authStatusSub = this.authService.
-    getAuthStatusListner().
-    subscribe(isAuthenticated => {
-      this.userIsAuthenticated = isAuthenticated;
-      this.userId = this.authService.getUserId();
-    });
+    this.authStatusSub = this.authService
+      .getAuthStatusListner()
+      .subscribe(isAuthenticated => {
+        this.userIsAuthenticated = isAuthenticated;
+        this.userId = this.authService.getUserId();
+      });
   }
 
   onDelete(postId: string){
     this.isLoading = true;
-    this.postService.deletePost(postId).subscribe(() => {
-      this.postService.getPosts(this.postsPerPage, this.currentPage);
+    this.postsService.deletePost(postId).subscribe(() => {
+      this.postsService.getPosts(this.postsPerPage, this.currentPage);
     }, ()=> {
       this.isLoading = false;
     });
@@ -59,7 +60,7 @@ export class PostListComponent implements OnInit, OnDestroy{
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.postsPerPage = pageData.pageSize;
-    this.postService.getPosts(this.postsPerPage, this.currentPage);
+    this.postsService.getPosts(this.postsPerPage, this.currentPage);
   }
 
   ngOnDestroy(): void {
