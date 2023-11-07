@@ -32,19 +32,37 @@ export class AuthService {
     return this.authStatusListner.asObservable();
   }
 
-  createUser(email: string, password: string){
-    const authData: AuthData = {email: email, password: password}
+  // createUser(email: string, password: string){
+  //   const authData: AuthData = {email: email, password: password}
+  //   this.http.post("http://localhost:3000/api/user/signup", authData)
+  //   .subscribe(response => {
+  //     this.router.navigate(['/']);
+  //   }, error => {
+  //     this.authStatusListner.next(false);
+  //   });
+  // }
+
+  createUser(email: string, password: string) {
+    const authData: AuthData = {email: email, password: password};
     this.http.post("http://localhost:3000/api/user/signup", authData)
-    .subscribe(response => {
-      console.log(response);
-    });
+      .subscribe({
+        next: () => this.router.navigate(['/']),
+        error: () => this.authStatusListner.next(false)
+      });
+      //// Deprecated...
+      // .subscribe(() => {
+      //   this.router.navigate["/"];
+      // }, error => {
+      //   this.authenticationStatusListener.next(false);
+      // });
   }
 
   login(email: string, password: string){
     const authData: AuthData = {email: email, password: password}
     this.http.post<{token: string, expiresIn: number, userId: string}>("http://localhost:3000/api/user/login", authData)
-    .subscribe(response => {
-      const token = response.token;
+    .subscribe({
+      next: (response) => {
+        const token = response.token;
       this.token = token;
       if (token) {
         const expirsInDuration = response.expiresIn;
@@ -56,6 +74,10 @@ export class AuthService {
         const expirationDate = new Date(now.getTime() + expirsInDuration * 1000);
         this.saveAuthData(token, expirationDate, this.userId);
         this.router.navigate(['/']);
+      }
+      },
+      error: () => {
+        this.authStatusListner.next(false)
       }
     });
   }
