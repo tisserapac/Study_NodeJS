@@ -79,7 +79,7 @@ export class PostService {
         id: id,
         title: title,
         content: content,
-        imagePath: image,
+        imagePath: image as string,
         creator: null
       };
     }
